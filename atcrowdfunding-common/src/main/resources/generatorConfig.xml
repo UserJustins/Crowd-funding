@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <classPathEntry  location="D:/store/mavenRepository3.5.0/mysql/mysql-connector-java/5.1.44/mysql-connector-java-5.1.44.jar"/>
+    <context id="MySQLTables" targetRuntime="MyBatis3">
+
+        <!-- 抑制注释生成 -->
+        <commentGenerator>
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+
+        <!-- 配置数据库位置; useSSL=false:不采用安全协议连接 -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/crowd"
+                        userId="root" password="root">
+        </jdbcConnection>
+
+        <!-- 不强制转换数据类型  -->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+
+        <!-- javaBean生成在哪里 -->
+        <javaModelGenerator
+                targetPackage="com.duheng.atcrowdfunding.bean"
+                targetProject="..\atcrowdfunding-bean\src\main\java">
+            <property name="enableSubPackages" value="true" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+
+        <!-- sqlMap:SQL映射文件(Mapper.xml文件) -->
+        <sqlMapGenerator targetPackage="mybatis.mapper"
+                         targetProject="..\atcrowdfunding-manager-impl\src\main\resources">
+            <property name="enableSubPackages" value="true" />
+        </sqlMapGenerator>
+
+        <!-- javaClient:java接口生成的地方 -->
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="com.duheng.atcrowdfunding.mapper"
+                             targetProject="..\atcrowdfunding-manager-api\src\main\java">
+            <property name="enableSubPackages" value="true" />
+        </javaClientGenerator>
+
+        <!-- %:匹配数据库中所有的表,根据表名生成类名 -->
+        <table schema="" tableName="%"></table>
+
+    </context>
+</generatorConfiguration>
