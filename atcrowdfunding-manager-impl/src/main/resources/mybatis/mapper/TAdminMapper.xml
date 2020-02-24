@@ -9,6 +9,23 @@
     <result column="email" jdbcType="VARCHAR" property="email" />
     <result column="createtime" jdbcType="CHAR" property="createtime" />
   </resultMap>
+  <delete id="deleteAdmin" >
+    delete from t_admin where id in
+    <foreach collection="ids" open="(" close=")" separator="," item="id">
+      #{id}
+    </foreach>
+
+  </delete>
+  <select id="selectAdminByKeyword" resultMap="BaseResultMap">
+    select id,
+		loginacct, username, email, createtime
+		from t_admin where
+		loginacct LIKE CONCAT("%",#{keyword},"%")
+		OR username LIKE CONCAT("%",#{keyword},"%")
+		OR email LIKE CONCAT("%",#{keyword},"%")
+		ORDER BY createtime DESC
+
+  </select>
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">

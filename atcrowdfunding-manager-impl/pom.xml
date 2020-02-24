@@ -128,11 +128,7 @@
         </dependency>
         <!-- 基础框架完成 -->
 
-        <!-- 分页 -->
-        <dependency>
-            <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper</artifactId>
-        </dependency>
+
 
         <!-- MBG -->
         <dependency>
