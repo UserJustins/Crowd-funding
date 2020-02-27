@@ -2,8 +2,9 @@ package com.duheng.atcrowdfunding.mapper;
 
 import com.duheng.atcrowdfunding.bean.TRole;
 import com.duheng.atcrowdfunding.bean.TRoleExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface TRoleMapper {
     long countByExample(TRoleExample example);
@@ -27,4 +28,13 @@ public interface TRoleMapper {
     int updateByPrimaryKeySelective(TRole record);
 
     int updateByPrimaryKey(TRole record);
+
+    /**
+     * 关键字的分页查询
+     * @param keyword
+     * @return
+     */
+    List<TRole> selectAdminByKeyword(String keyword);
+
+    int batchRemoveById(@Param("ids") Integer[] ids);
 }

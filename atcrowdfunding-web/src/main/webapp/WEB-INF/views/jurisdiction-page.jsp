@@ -39,7 +39,9 @@ function initWholeTree(){
 			},
 			key:{
 				//很重要，跳转的话，点击之后页面跳转了按钮组就出不来
-				"url":"notExistsProperty"//不让节点进行跳转
+				url:"notExistsProperty",//不让节点进行跳转
+				name:"title"
+
 			}
 		},
 		view: {
@@ -79,12 +81,12 @@ function initWholeTree(){
 	};
 
 	$.ajax({
-		url:"${APP_PATH}/menu/search",
+		url:"${APP_PATH}/jurisdiction/search",
 		dataType:"json",
 		success:function(response){
 			var zNodes =response;
 			//添加一个数据表之外的最根节点
-			zNodes.push({id:'0',name:'系统菜单ROOT',icon:'glyphicon glyphicon-list'})
+			zNodes.push({id:'0',title:'系统权限菜单ROOT',icon:'glyphicon glyphicon-list'})
 			$.fn.zTree.init($("#treeDemo"), setting, zNodes);
 			//zTree的方法支持展开各个节点
 			var treeObj = $.fn.zTree.getZTreeObj("treeDemo");//容器的id名
@@ -109,14 +111,14 @@ function saveMenu(){
 		//alert("nihao");
 		//获取要提交的数据
 		var name = $("#menuAddModal [name='name']").val();
-		var url = $("#menuAddModal [name='url']").val();
+		var title = $("#menuAddModal [name='title']").val();
 		var icon = $("#menuAddModal [name='icon']:checked").val();
 		if(name ==null || name ==""){
-			layer.msg("请填写菜单的名称");
+			layer.msg("请填写权限按钮的模块名和操作名");
 			return;
 		}
-		if(url ==null || url ==""){
-			layer.msg("请填写菜单对应的url地址")
+		if(title ==null || title ==""){
+			layer.msg("请填写权限按钮名称")
 			return;
 		}
 		if(icon==undefined){
@@ -125,11 +127,11 @@ function saveMenu(){
 		}
 		//异步的发送请求
 		$.ajax({
-			url:"${APP_PATH}/menu/save",
+			url:"${APP_PATH}/jurisdiction/save",
 			type:"POST",
 			data:{
 				name:name,
-				url:url,
+				title:title,
 				icon:icon,
 				pid:window.menuId //在加载模态框的时候赋值给了全员变量
 			},
@@ -138,6 +140,9 @@ function saveMenu(){
 				if(response == "success"){
 					layer.msg("保存成功")
 					initWholeTree();
+					name='';
+					title='';
+					icon='';
 				}
 			}
 			
@@ -157,7 +162,7 @@ function showEditModal(id) {
     window.menuId = id;//数据请求要带上
 
     $.ajax({
-		url:"${APP_PATH}/menu/get",
+		url:"${APP_PATH}/jurisdiction/get",
 		type:"POST",
 		data:{
 			id:menuId 
@@ -165,11 +170,11 @@ function showEditModal(id) {
 		success:function(resp){
 			//返回一个Menu
 			var name = resp.name;
-			var url = resp.url;
+			var title = resp.title;
 			var icon = resp.icon;
 			//回显数据
 			$("#menuEditModal [name='name']").val(name);
-			$("#menuEditModal [name='url']").val(url);
+			$("#menuEditModal [name='title']").val(title);
 			$("#menuEditModal [name='icon'][value='"+icon+"']").attr("checked",true);
 		}
 		
@@ -179,23 +184,23 @@ function editMenu(){
 	$("#menuEditBtn").click(function(){
 		//获取要提交的数据
 		var name = $("#menuEditModal [name='name']").val();
-		var url = $("#menuEditModal [name='url']").val();
+		var title = $("#menuEditModal [name='title']").val();
 		var icon = $("#menuEditModal [name='icon']:checked").val();
 		if(name ==null || name ==""){
-			layer.msg("更新菜单的名称必填");
+			layer.msg("更新按钮名称必填");
 			return;
 		}
-		if(url ==null || url ==""){
-			layer.msg("更新菜单对应的url地址必填")
+		if(title ==null || title ==""){
+			layer.msg("更新按钮对应的name值必填")
 			return;
 		}
 		
 		$.ajax({
-			url:"${APP_PATH}/menu/modify",
+			url:"${APP_PATH}/jurisdiction/modify",
 			type:"POST",
 			data:{
 				name:name,
-				url:url,
+				title:title,
 				icon:icon,
 				id:window.menuId
 
@@ -222,7 +227,7 @@ function showDelConfirmModal(id){
 		return;
 	}
 	$.ajax({
-		url:"${APP_PATH}/menu/remove",
+		url:"${APP_PATH}/jurisdiction/remove",
 		type:"POST",
 		data:{
 			id:id
@@ -261,29 +266,21 @@ function showDelConfirmModal(id){
 			                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			                    <span aria-hidden="true">×</span>
 			                </button>
-			                <h4 class="modal-title">尚筹网系统弹窗</h4>
+			                <h4 class="modal-title">系统权限增加弹窗</h4>
 			            </div>
 			            <form>
 			                <div class="modal-body">
-			                        请输入节点名称：<input type="text" name="name"><br>
-			                        请输入URL地址：<input type="text" name="url"><br>
-								<input type="radio" name="icon" value="glyphicon glyphicon-th-list">           <i class="glyphicon glyphicon-th-list"></i>
-								<input type="radio" name="icon" value="glyphicon glyphicon-dashboard">         <i class="glyphicon glyphicon-dashboard"></i>
-								<input type="radio" name="icon" value="glyphicon glyphicon glyphicon-tasks">   <i class="glyphicon glyphicon glyphicon-tasks"></i>
-								<input type="radio" name="icon" value="glyphicon glyphicon-user">              <i class="glyphicon glyphicon-user"></i>
-								<input type="radio" name="icon" value="glyphicon glyphicon-king">              <i class="glyphicon glyphicon-king"></i>
-								<input type="radio" name="icon" value="glyphicon glyphicon-lock">              <i class="glyphicon glyphicon-lock"></i>
-								<input type="radio" name="icon" value="glyphicon glyphicon-ok">                <i class="glyphicon glyphicon-ok"></i>
-								<input type="radio" name="icon" value="glyphicon glyphicon-check">             <i class="glyphicon glyphicon-check"></i>
-								<input type="radio" name="icon" value="glyphicon glyphicon-th-large">          <i class="glyphicon glyphicon-th-large"></i><br>
-								<input type="radio" name="icon" value="glyphicon glyphicon-picture">           <i class="glyphicon glyphicon-picture"></i>
-								<input type="radio" name="icon" value="glyphicon glyphicon-equalizer">         <i class="glyphicon glyphicon-equalizer"></i>
-								<input type="radio" name="icon" value="glyphicon glyphicon-random">            <i class="glyphicon glyphicon-random"></i>
-								<input type="radio" name="icon" value="glyphicon glyphicon-hdd">               <i class="glyphicon glyphicon-hdd"></i>
-								<input type="radio" name="icon" value="glyphicon glyphicon-comment">           <i class="glyphicon glyphicon-comment"></i>
-								<input type="radio" name="icon" value="glyphicon glyphicon-list">              <i class="glyphicon glyphicon-list"></i>
-								<input type="radio" name="icon" value="glyphicon glyphicon-tags">              <i class="glyphicon glyphicon-tags"></i>
-								<input type="radio" name="icon" value="glyphicon glyphicon-list-alt">          <i class="glyphicon glyphicon-list-alt"></i>
+								请输入权限按钮名：<input type="text" name="title"><br>
+								请输入(模块名:按钮性质)：<input type="text" name="name"><br>
+
+
+								<input type="radio" name="icon" value="glyphicon glyphicon-user">           <i class="glyphicon glyphicon-user"></i>
+								<input type="radio" name="icon" value="glyphicon glyphicon-plus">         <i class="glyphicon glyphicon-plus"></i>
+								<input type="radio" name="icon" value="glyphicon glyphicon-remove">   <i class="glyphicon glyphicon glyphicon-remove"></i>
+								<input type="radio" name="icon" value="glyphicon glyphicon-pencil">              <i class="glyphicon glyphicon-pencil"></i>
+								<input type="radio" name="icon" value="glyphicon glyphicon-heart">              <i class="glyphicon glyphicon-heart"></i>
+								<input type="radio" name="icon" value="glyphicon glyphicon-th-list">              <i class="glyphicon glyphicon-th-list"></i>
+								<input type="radio" name="icon" value="glyphicon glyphicon-zoom-in">                <i class="glyphicon glyphicon-zoom-in"></i>
 								<br/>
 			                </div>
 			                <div class="modal-footer">
@@ -304,49 +301,35 @@ function showDelConfirmModal(id){
 			                    aria-label="Close">
 			                    <span aria-hidden="true">&times;</span>
 			                </button>
-			                <h4 class="modal-title">系统菜单修改弹窗</h4>
+			                <h4 class="modal-title">系统权限修改弹窗</h4>
 			            </div>
 			            <form>
 			                <div class="modal-body">
-			                    请输入节点名称：<input type="text" name="name" /><br /> 请输入URL地址：<input
-			                        type="text" name="url" /><br />
+			                    请输入权限节点名称：<input type="text" name="title" /><br /> 请输入模块:操作：<input
+			                        type="text" name="name" /><br />
 								<input type="radio" name="icon"
 									   value="glyphicon glyphicon-th-list" /> <i
-									class="glyphicon glyphicon-th-list"></i> <input type="radio"
-																					name="icon" value="glyphicon glyphicon-dashboard" /> <i
-									class="glyphicon glyphicon-dashboard"></i> <input type="radio"
-																					  name="icon" value="glyphicon glyphicon glyphicon-tasks" /> <i
-									class="glyphicon glyphicon glyphicon-tasks"></i> <input
-									type="radio" name="icon" value="glyphicon glyphicon-user" /> <i
-									class="glyphicon glyphicon-user"></i> <input type="radio"
-																				 name="icon" value="glyphicon glyphicon-king" /> <i
-									class="glyphicon glyphicon-king"></i> <input type="radio"
-																				 name="icon" value="glyphicon glyphicon-lock" /> <i
-									class="glyphicon glyphicon-lock"></i> <input type="radio"
-																				 name="icon" value="glyphicon glyphicon-ok" /> <i
-									class="glyphicon glyphicon-ok"></i> <input type="radio"
-																			   name="icon" value="glyphicon glyphicon-check" /> <i
-									class="glyphicon glyphicon-check"></i> <input type="radio"
-																				  name="icon" value="glyphicon glyphicon-th-large" /> <i
-									class="glyphicon glyphicon-th-large"></i><br /> <input
-									type="radio" name="icon" value="glyphicon glyphicon-picture" /> <i
-									class="glyphicon glyphicon-picture"></i> <input type="radio"
-																					name="icon" value="glyphicon glyphicon-equalizer" /> <i
-									class="glyphicon glyphicon-equalizer"></i> <input type="radio"
-																					  name="icon" value="glyphicon glyphicon-random" /> <i
-									class="glyphicon glyphicon-random"></i> <input type="radio"
-																				   name="icon" value="glyphicon glyphicon-hdd" /> <i
-									class="glyphicon glyphicon-hdd"></i> <input type="radio"
-																				name="icon" value="glyphicon glyphicon-comment" /> <i
-									class="glyphicon glyphicon-comment"></i> <input type="radio"
-																					name="icon" value="glyphicon glyphicon-list" /> <i
-									class="glyphicon glyphicon-list"></i> <input type="radio"
-																				 name="icon" value="glyphicon glyphicon-tags" /> <i
-									class="glyphicon glyphicon-tags"></i> <input type="radio"
-																				 name="icon" value="glyphicon glyphicon-list-alt" /> <i
-									class="glyphicon glyphicon-list-alt"></i> <br />
+									class="glyphicon glyphicon-th-list"></i>
+								<input type="radio" name="icon"
+									   value="glyphicon glyphicon-user" /> <i
+									class="glyphicon glyphicon-user"></i>
+								<input type="radio" name="icon"
+									   value="glyphicon glyphicon-plus" /> <i
+									class="glyphicon glyphicon-plus"></i>
+								<input type="radio" name="icon"
+									   value="glyphicon glyphicon-remove" /> <i
+									class="glyphicon glyphicon-remove"></i>
+								<input type="radio" name="icon"
+									   value="glyphicon glyphicon-zoom-in" /> <i
+									class="glyphicon glyphicon-zoom-in"></i>
+								<input type="radio" name="icon"
+									   value="glyphicon glyphicon-heart" /> <i
+									class="glyphicon glyphicon-heart"></i>
+								<input type="radio" name="icon"
+									   value="glyphicon glyphicon-pencil" /> <i
+									class="glyphicon glyphicon-pencil"></i>
 
-			                </div>
+							</div>
 			                <div class="modal-footer">
 			                    <button id="menuEditBtn" type="button" class="btn btn-success">
 			                        <i class="glyphicon glyphicon-refresh"></i> 更新

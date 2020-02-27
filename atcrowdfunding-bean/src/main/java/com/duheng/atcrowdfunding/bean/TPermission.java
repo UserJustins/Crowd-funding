@@ -1,5 +1,8 @@
 package com.duheng.atcrowdfunding.bean;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TPermission {
     private Integer id;
 
@@ -7,9 +10,19 @@ public class TPermission {
 
     private String title;
 
+    private List<TPermission> children = new ArrayList<>();
+
     private String icon;
 
     private Integer pid;
+
+    public List<TPermission> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<TPermission> children) {
+        this.children = children;
+    }
 
     public Integer getId() {
         return id;

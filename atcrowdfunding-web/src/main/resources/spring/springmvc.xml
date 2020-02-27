@@ -29,4 +29,6 @@
     <mvc:view-controller path="/admin/login" view-name="admin-login"/>
     <mvc:view-controller path="/admin/main" view-name="admin-main"/>
     <mvc:view-controller path="/admin/add" view-name="admin-add"/>
+    <mvc:view-controller path="/menu/show" view-name="menu-page"/>
+    <mvc:view-controller path="/jurisdiction/show" view-name="jurisdiction-page"/>
 </beans>

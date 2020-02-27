@@ -11,10 +11,12 @@
 				<ul style="margin-top: 10px; display: none;">
 					<li style="height: 30px;"><a href="${APP_PATH}/admin/keySearch?pageNum=1"><i
 							class="glyphicon glyphicon-user"></i> 用户维护</a></li>
-					<li style="height: 30px;"><a href="${APP_PATH}/role/search"><i
+					<li style="height: 30px;"><a href="${APP_PATH}/role/keySearch?pageNum=1"><i
 							class="glyphicon glyphicon-king"></i> 角色维护</a></li>
 					<li style="height: 30px;"><a href="${APP_PATH}/menu/show"><i
 							class="glyphicon glyphicon-lock"></i> 菜单维护</a></li>
+					<li style="height: 30px;"><a href="${APP_PATH}/jurisdiction/show"><i
+							class="glyphicon glyphicon-queen"></i> 权限维护</a></li>
 				</ul></li>
 			<li class="list-group-item tree-closed"><span><i
 					class="glyphicon glyphicon-ok"></i> 业务审核 <span class="badge"

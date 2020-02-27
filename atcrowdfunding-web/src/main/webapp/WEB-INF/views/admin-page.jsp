@@ -67,7 +67,6 @@
 
 	//=========================================单条记录删除=======================================================
 	function singleRemove(id){
-		alert(id)
 		var confirmResult = confirm("你确定要删除该信息吗？");
 		if(!confirmResult){
 			return;

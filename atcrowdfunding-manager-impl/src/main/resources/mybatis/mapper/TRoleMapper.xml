@@ -5,6 +5,22 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
   </resultMap>
+
+
+  <select id="selectAdminByKeyword" resultMap="BaseResultMap">
+
+    select id,name
+		from t_role where
+		name LIKE CONCAT("%",#{keyword},"%")
+
+  </select>
+  <delete id="batchRemoveById">
+    delete from t_role where id in
+    <foreach collection="ids" open="(" close=")" separator="," item="id">
+      #{id}
+    </foreach>
+  </delete>
+
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">

@@ -2,11 +2,13 @@ package com.duheng.atcrowdfunding.service;
 
 import com.duheng.atcrowdfunding.bean.TMenu;
 
+import java.util.List;
+
 public interface IMenuService {
 	/**
-	 * 获取封装成树形的menu
+	 * 查询所有的menu
 	 */
-	TMenu getMenu();
+	List<TMenu> getMenu();
 	/**
 	 * 保存菜单
 	 * @return
