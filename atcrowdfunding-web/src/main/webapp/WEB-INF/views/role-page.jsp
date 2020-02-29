@@ -7,8 +7,11 @@
 <%@ include file="/WEB-INF/include/head.jsp" %>
 <link rel="stylesheet" href="${APP_PATH}/static/css/pagination.css" />
 <script type="text/javascript" src="${APP_PATH}/static/script/jquery.pagination.js"></script>
+	<link rel="stylesheet" href="${APP_PATH}/static/ztree/zTreeStyle.css">
+	<script src="${APP_PATH}/static/ztree/jquery.ztree.all-3.5.min.js"></script>
 <script type="text/javascript">
 $(function() {
+
 
 	$("#saveRole").click(function(){
 		var roleName = $("#roleName").val();
@@ -37,7 +40,106 @@ $(function() {
 		});
 });
 
+	//分配权限
+	$("#assignBtn").click(function(){
+		//最后一个元素永远是RoleID
+		var arrID =[];
+
+		var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+		//返回全部符合要求的节点集合 Array
+		var nodeArr = treeObj.getCheckedNodes(true);
+		$.each(nodeArr,function (i,node) {
+			arrID[i] = node.id + '';
+		})
+		arrID.push(roleId);
+		$.ajax({
+			url:"${APP_PATH}/role/assignPermission",
+			data:{
+				ids:arrID
+			},
+			success:function(result){
+				if ("ok" == result){
+					layer.msg("分配成功",{icon:1,time:3000})
+					$("#assignModal").modal('hide');
+				}
+
+			}
+		})
+	});
+
 })
+//初始化权限树的模态框
+function initWholeTree(id){
+	//RoleId,点击分配按钮要传参
+	window.roleId = id;
+	var setting = {
+
+		data: {
+			simpleData: {
+				enable: true,//开启简单模式，后台不需要封装子节点，给前台全表数据即可
+				idKey: "id",
+				pIdKey: "pid",
+			},
+			key:{
+				//很重要，跳转的话，点击之后页面跳转了按钮组就出不来
+				url:"notExistsProperty",//不让节点进行跳转
+				name:"title"
+
+			},
+
+		},
+		view: {
+			addDiyDom: function(treeId, treeNode){
+				//treeNode:setting.treeId + "_" + 内部计数
+				//将id="treeDemo_序号_icon"的标签的class属性删除
+				$("#"+treeNode.tId+"_ico").removeClass();
+				//在id="treeDemo_序号_span"的标签前添加一个<span>标签，属性class值为treeNode.icon
+				//treeNode.icon就是TMenu中每个节点都封装了一个icon属性
+				$("#"+treeNode.tId+"_span").before("<span class='"+treeNode.icon+"'></span>")
+			},
+
+		},
+		check: {
+			enable: true
+		},
+	};
+
+	$.ajax({//请求的是所有的权限树
+		url:"${APP_PATH}/jurisdiction/search",
+		dataType:"json",
+		success:function(tree){
+			//再发一次ajax请求，角色的数据回显
+			$.ajax({
+				url:"${APP_PATH}/role/getPermission",
+				data:{
+					id:id,
+				},
+				success:function(permObj){//返回的是一个RolePermission对象
+
+					//打开模态框
+					$("#assignModal").modal('show');
+					var zNodes =tree;
+					$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+					//zTree的方法支持展开各个节点
+					var treeObj = $.fn.zTree.getZTreeObj("treeDemo");//容器的id名
+					treeObj.expandAll(true);
+					//var nodes = treeObj.getCheckedNodes(true);
+
+					//怎样对节点进行数据回显？
+					//1、根据PermissionId值找到对应的Node
+					$.each(permObj,function (i,e) {
+						var id = e.permissionid;
+						//在整个树找id='id'的节点
+						var node = treeObj.getNodeByParam("id", id, null);
+						//2、设置节点的选择状态
+						treeObj.checkNode(node, true, false,false);
+					})
+				}
+			});
+
+		}
+	});
+}
 
 /**
  * 修改的JS操作
@@ -114,6 +216,9 @@ function removeAjax(IdArray){
 		}
 	});
 }
+
+
+
 </script>
 </head>
 
@@ -170,6 +275,34 @@ function removeAjax(IdArray){
 	  </div>
 	</div>
     <!-- 修改模态框end -->
+<!-- 权限分配模态框start -->
+<div id="assignModal" class="modal fade" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">分配权限操作</h4>
+			</div>
+			<div class="modal-body">
+				<!-- 数据展示 -->
+				<div class="panel panel-default">
+					<div class="panel-heading"><i class="glyphicon glyphicon-th-list"></i> 权限分配列表 <div style="float:right;cursor:pointer;" data-toggle="modal" data-target="#myModal"><i class="glyphicon glyphicon-question-sign"></i></div></div>
+					<div class="panel-body">
+						<ul id="treeDemo" class="ztree"></ul>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button id="assignBtn" type="button" class="btn btn-primary">分配</button>
+				</div>
+
+				<!-- 数据展示============================================= -->
+
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 权限分配模态框end -->
     <div class="container-fluid">
       <div class="row">
         <%@ include file="/WEB-INF/include/sidebar.jsp" %>
@@ -208,7 +341,8 @@ function removeAjax(IdArray){
                   <td align="center">${code.count }</td>
                   <td>${role.name}</td>
                   <td>
-				      <button type="button" class="btn btn-success btn-xs"><i class=" glyphicon glyphicon-check"></i></button>
+				      <button id="assignModel" onclick="initWholeTree('${role.id}')" type="button"  class="btn btn-success btn-xs"
+					          ><i class=" glyphicon glyphicon-check"></i></button>
 				      <button type="button" class="btn btn-primary btn-xs"
 							  onclick="toEdit('${role.id}','${role.name}');"><i class=" glyphicon glyphicon-pencil"></i></button>
 					  <button type="button" class="btn btn-danger btn-xs"

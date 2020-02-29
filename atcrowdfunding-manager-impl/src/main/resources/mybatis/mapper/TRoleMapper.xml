@@ -6,7 +6,17 @@
     <result column="name" jdbcType="VARCHAR" property="name" />
   </resultMap>
 
+  <!--List<TRole> queryAssignRole(String id);
 
+    List<TRole> queryNotAssignRole(String id);-->
+  <select id="queryAssignRole" resultMap="BaseResultMap">
+    select *  from t_role where id
+     IN (select roleid from t_admin_role where adminid=#{id})
+  </select>
+  <select id="queryNotAssignRole" resultMap="BaseResultMap">
+    select *  from t_role where id
+     NOT IN (select roleid from t_admin_role where adminid=#{id})
+  </select>
   <select id="selectAdminByKeyword" resultMap="BaseResultMap">
 
     select id,name

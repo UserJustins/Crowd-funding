@@ -37,4 +37,8 @@ public interface TRoleMapper {
     List<TRole> selectAdminByKeyword(String keyword);
 
     int batchRemoveById(@Param("ids") Integer[] ids);
+
+    List<TRole> queryAssignRole(Integer id);
+
+    List<TRole> queryNotAssignRole(Integer id);
 }

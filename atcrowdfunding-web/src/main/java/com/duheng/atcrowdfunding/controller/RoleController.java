@@ -1,6 +1,8 @@
 package com.duheng.atcrowdfunding.controller;
 
 import com.duheng.atcrowdfunding.bean.TRole;
+import com.duheng.atcrowdfunding.bean.TRolePermission;
+import com.duheng.atcrowdfunding.service.IRolePermissionService;
 import com.duheng.atcrowdfunding.service.IRoleService;
 import com.duheng.crowdfunding.utils.Const;
 import com.github.pagehelper.PageInfo;
@@ -11,12 +13,42 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
+
 
 @Controller
 @RequestMapping("/role")
 public class RoleController {
 	@Autowired
 	private IRoleService roleService;
+
+	@Autowired
+	private IRolePermissionService rolePermissionService;
+
+	/**
+	 * 根据角色的ID查询权限的id
+	 * @param id
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/getPermission")
+	public List<TRolePermission> getPermission(@RequestParam(value = "id")Integer id){
+		return rolePermissionService.getByRoleId(id);
+	}
+	/**
+	 * 根据角色的ID查询权限的id
+	 * @param id
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/assignPermission")
+	public String  assignPermission(@RequestParam(value = "ids[]")Integer[] id){
+		int num = rolePermissionService.addRolePermission(id);
+		if (num > 0) {
+			return "ok";
+		}
+		return "fail";
+	}
 	@ResponseBody
 	@RequestMapping("/remove")
 	public String remove(@RequestParam(value = "ids[]")Integer[] ids){

@@ -63,4 +63,23 @@ public class RoleServiceImpl implements IRoleService {
     public int remove(Integer[] ids) {
         return tRoleMapper.batchRemoveById(ids);
     }
+
+    /**
+     * 跟据Admin的id获取 已分配角色
+     * @param id
+     * @return
+     */
+    @Override
+    public List<TRole> getAssignRole(Integer id) {
+        return tRoleMapper.queryAssignRole(id);
+    }
+    /**
+     * 跟据Admin的id获取 未分配角色
+     * @param id
+     * @return
+     */
+    @Override
+    public List<TRole> getNotAssignRole(Integer id) {
+        return tRoleMapper.queryNotAssignRole(id);
+    }
 }

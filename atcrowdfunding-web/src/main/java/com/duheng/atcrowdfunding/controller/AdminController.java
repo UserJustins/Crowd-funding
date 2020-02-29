@@ -2,7 +2,10 @@ package com.duheng.atcrowdfunding.controller;
 
 
 import com.duheng.atcrowdfunding.bean.TAdmin;
+import com.duheng.atcrowdfunding.bean.TRole;
+import com.duheng.atcrowdfunding.service.IAdminRoleService;
 import com.duheng.atcrowdfunding.service.IAdminService;
+import com.duheng.atcrowdfunding.service.IRoleService;
 import com.duheng.crowdfunding.utils.Const;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +17,63 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
+import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
 	@Autowired
 	private IAdminService adminService;
+
+	@Autowired
+	private IRoleService roleService;
+
+	@Autowired
+	private IAdminRoleService adminRoleService;
+	/**
+	 * 添加用户分配的角色
+	 * @param ids roleID+adminID，最后一个元素是adminID
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/assignRole")
+	public String assign(@RequestParam(value = "ids[]")Integer[] ids){
+		int num = adminRoleService.addRoles(ids);
+		if (num > 0) {
+			return "success";
+
+		}
+		return "fail";
+	}
+	/**
+	 * 撤销用户分配的角色
+	 * @param ids roleID+adminID，最后一个元素是adminID
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/delAssignRole")
+	public String delAssignRole(@RequestParam(value = "ids[]")Integer[] ids){
+		int num = adminRoleService.deleteRoles(ids);
+		if (num > 0) {
+			return "success";
+
+		}
+		return "fail";
+	}
+
+
+	@RequestMapping("/toAssign")
+	public String toAssign(Integer id,Model model) {
+		//1.根据用户id查询用户已经分配的角色
+		List<TRole> isAssList = roleService.getAssignRole(id);
+		//2.根据用户id查询用户未分配的角色
+		List<TRole> notAssList = roleService.getNotAssignRole(id);
+
+		model.addAttribute(Const.ADMIN_IS_ASSIGN_ROLE, isAssList);
+		model.addAttribute(Const.ADMIN_NOT_ASSIGN_ROLE, notAssList);
+
+		return "admin-roleAssign";
+	}
 	/*
 	 * 执行修改的操作
 	 */

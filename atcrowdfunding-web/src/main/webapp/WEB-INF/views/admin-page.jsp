@@ -29,14 +29,6 @@
 			$("input:checkbox[name=checkBoxName]:checked").each(function(){
 				//现在的this是一个DOM，需要转换成jQuery
 				adminIds.push($(this).val());
-				//获取勾选的账户名称
-				/*
-                    <td>
-                        <input class="itemBox" type="checkbox" name="checkBoxName" value="<%--${admin.id}--%>">
-					</td>
-					<td><%--${admin.loginAcct}--%></td>
-
-				*/
 				var loginAcct = $(this)			//input标签
 						.parent("td")	//input的父级
 						.next()
@@ -86,7 +78,7 @@
 			},
 			success:function(response){
 				console.log(response);
-				if(response="true"){
+				if(response=="true"){
 					alert("删除成功");
 				}
 				window.location.href = "${APP_PATH}/admin/keySearch";
@@ -161,9 +153,10 @@
 											<td>${admin.username}</td>
 											<td>${admin.email}</td>
 											<td>
-												<button type="button" class="btn btn-success btn-xs">
+												<a  class="btn btn-success btn-xs"
+													href="${APP_PATH }/admin/toAssign?id=${admin.id}">
 													<i class=" glyphicon glyphicon-check"></i>
-												</button>
+												</a>
 												<a  class="btn btn-primary btn-xs"
 													href="${APP_PATH }/admin/edit?id=${admin.id}&pageNum=${PAGE_INFO_KEY.pageNum}">
 													<i class=" glyphicon glyphicon-pencil"></i>
