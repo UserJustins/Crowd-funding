@@ -7,7 +7,23 @@
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="icon" jdbcType="VARCHAR" property="icon" />
     <result column="url" jdbcType="VARCHAR" property="url" />
+<!--    <collection property="children"
+                ofType="com.duheng.atcrowdfunding.bean.TMenu"
+                column="id"
+                select="selectChildren"/>-->
   </resultMap>
+
+  <!--<select id="selectWithChildrenTree" resultMap="BaseResultMap">
+      select id, pid, name, icon, url
+       from t_menu where pid = 0 or pid is null ;
+  </select>
+  <select id="selectChildren" resultMap="BaseResultMap">
+      select id, pid, name, icon, url
+       from t_menu where pid = #{id} ;
+  </select>-->
+
+
+
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">

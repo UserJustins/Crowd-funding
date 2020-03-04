@@ -2,9 +2,11 @@ package com.duheng.atcrowdfunding.controller;
 
 
 import com.duheng.atcrowdfunding.bean.TAdmin;
+import com.duheng.atcrowdfunding.bean.TMenu;
 import com.duheng.atcrowdfunding.bean.TRole;
 import com.duheng.atcrowdfunding.service.IAdminRoleService;
 import com.duheng.atcrowdfunding.service.IAdminService;
+import com.duheng.atcrowdfunding.service.IMenuService;
 import com.duheng.atcrowdfunding.service.IRoleService;
 import com.duheng.crowdfunding.utils.Const;
 import com.github.pagehelper.PageInfo;
@@ -30,6 +32,8 @@ public class AdminController {
 
 	@Autowired
 	private IAdminRoleService adminRoleService;
+	@Autowired
+	private IMenuService menuService;
 	/**
 	 * 添加用户分配的角色
 	 * @param ids roleID+adminID，最后一个元素是adminID
@@ -153,6 +157,9 @@ public class AdminController {
 		}
 		// 将返回的对象放到session中。重定向到主页面
 		session.setAttribute(Const.ARRT_NAME_IN_SESSION, admin);
+		List<TMenu> menuTree_2 = menuService.getMenuTree_2();
+		session.setAttribute(Const.ARRT_MENU_IN_SESSION, menuTree_2);
+
 		return "redirect:/admin/main";
 	}
 	

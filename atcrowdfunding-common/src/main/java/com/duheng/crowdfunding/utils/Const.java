@@ -18,4 +18,6 @@ public class Const {
 
 	//用户未分配角色集合
     public static final String ADMIN_NOT_ASSIGN_ROLE = "ADMIN_NOT_ASSIGN_ROLE";
+    //菜单集合放Session
+    public static final String ARRT_MENU_IN_SESSION = "ARRT_MENU_IN_SESSION";
 }

@@ -2,10 +2,14 @@ package com.duheng.atcrowdfunding.mapper;
 
 import com.duheng.atcrowdfunding.bean.TMenu;
 import com.duheng.atcrowdfunding.bean.TMenuExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 public interface TMenuMapper {
+
+    List<TMenu> selectWithChildrenTree();
+
     long countByExample(TMenuExample example);
 
     int deleteByExample(TMenuExample example);
@@ -27,4 +31,6 @@ public interface TMenuMapper {
     int updateByPrimaryKeySelective(TMenu record);
 
     int updateByPrimaryKey(TMenu record);
+
+
 }

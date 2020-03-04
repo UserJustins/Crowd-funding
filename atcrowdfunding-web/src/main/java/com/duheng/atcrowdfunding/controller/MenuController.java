@@ -15,7 +15,19 @@ import java.util.List;
 public class MenuController {
 	@Autowired
 	private IMenuService menuService;
-	
+
+	@RequestMapping("/tree1")
+	@ResponseBody
+	public List<TMenu> tree1(){
+		return menuService.getMenuTree_1();
+	}
+
+	@RequestMapping("/tree2")
+	@ResponseBody
+	public List<TMenu> tree2(){
+		return  menuService.getMenuTree_2();
+	}
+
 	/*
 	 * 删除
 	 */

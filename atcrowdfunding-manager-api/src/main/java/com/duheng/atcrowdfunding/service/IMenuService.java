@@ -5,6 +5,15 @@ import com.duheng.atcrowdfunding.bean.TMenu;
 import java.util.List;
 
 public interface IMenuService {
+
+	/**
+	 * 查询所有的menu
+	 */
+	List<TMenu> getMenuTree_1();
+	/**
+	 * 查询所有的menu
+	 */
+	List<TMenu> getMenuTree_2();
 	/**
 	 * 查询所有的menu
 	 */
