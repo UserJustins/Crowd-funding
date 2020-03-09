@@ -15,7 +15,7 @@ SSM三大框架的整合配置文件都在atcrowdfunding-web的resources文件�
 db.properties文件中已配置，就可以部署运行项目。  
 
 项目的功能模块主要页面的效果图    
-1. 用户管理页面
+1. 用户管理页面      
 ![image](https://github.com/UserJustins/Crowd-funding/blob/master/images/user.png)
 2. 权限管理页面    
 ![image](https://github.com/UserJustins/Crowd-funding/blob/master/images/authentic.png)
