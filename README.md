@@ -12,7 +12,9 @@ atcrowdfunding-parent是父工程，以下都是子工程，其中atcrowdfunding
 同一项目的同一文件下。     
 
 SSM三大框架的整合配置文件都在atcrowdfunding-web的resources文件下，如果SQL脚本已经执行，数据库的相关配置在
-db.properties文件中已配置，就可以部署运行项目。
+db.properties文件中已配置，就可以部署运行项目。  
+
+项目的功能模块效果图
 
 
 
